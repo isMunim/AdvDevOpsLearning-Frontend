@@ -57,6 +57,7 @@ pipeline {
                 // Setting namespace context. Not needed if your node app is running in default ns.
                 sh 'kubectl config set-context --current --namespace=nodejs'
                 echo 'set image to update the container'
+                // Changing the iage the gke deployment
                 sh 'kubectl set image deployment/node-frontend-deployment node-frontend=$imageName:$BUILD_NUMBER'
             }
         }     
