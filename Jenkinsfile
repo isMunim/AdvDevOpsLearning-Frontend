@@ -2,7 +2,7 @@ pipeline {
     agent any 
     environment {
         registryCredential = 'docker'
-        imageName = 'ismunim/nodejs-backend:v1.'
+        imageName = 'ismunim/nodejs-frontend'
         dockerImage = ''
         }
     stages {
@@ -16,7 +16,7 @@ pipeline {
             }
             steps {
                 echo 'Retrieve source from github. run npm install and npm test'
-                git branch: 'master',
+                git branch: 'jenkins-testing',
                     url: 'https://github.com/isMunim/AdvDevOpsLearning-Frontend.git'
                 echo 'checking if that worked'
                 sh 'ls -a'
@@ -24,20 +24,25 @@ pipeline {
                 sh 'npm test'
             }
         }
-        // stage('Building image') {
-        //     steps{
-        //         script {
-        //             echo 'build the image' 
-        //         }
-        //     }
-        //     }
-        // stage('Push Image') {
-        //     steps{
-        //         script {
-        //             echo 'push the image to docker hub' 
-        //         }
-        //     }
-        // }     
+        stage('Building image') {
+            steps{
+                script {
+                    echo 'build the image' 
+                    dockerImage = docker.build imageName
+                }
+            }
+            }
+        stage('Push Image') {
+            steps{
+                script {
+                    echo 'push the image to docker hub' 
+                    docker.withRegistry('', registryCredential) {
+                        dockerImage.push("$BUILD_NUMBER")
+                    }
+                    
+                }
+            }
+        }     
         //  stage('deploy to k8s') {
         //      agent {
         //         docker { 
