@@ -54,7 +54,8 @@ pipeline {
             steps {
                 echo 'connecting to the GKE cluster'
                 sh 'gcloud container clusters get-credentials nodejs-cluster --zone us-central1-a --project dtc-102021-u112'
-                
+                // Setting namespace context. Not needed if your node app is running in default ns.
+                sh 'kubectl config set-context --current --namespace=nodejs'
                 echo 'set image to update the container'
                 sh 'kubectl set image deployment/node-frontend-deployment node-frontend=$imageName:$BUILD_NUMBER'
             }
