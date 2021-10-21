@@ -53,10 +53,10 @@ pipeline {
                     }
             steps {
                 echo 'connecting to the GKE cluster'
-                sh 'gcloud container clusters get-credentials firstdown-munim-cluster --zone us-central1-a --project dtc-102021-u112'
+                sh 'gcloud container clusters get-credentials manny-cluster --zone us-central1-a --project dtc-102021-u106'
                 
                 echo 'set image to update the container'
-                sh 'kubectl set image deployment/events-external events-external=$imageName:$BUILD_NUMBER'
+                sh 'kubectl set image deployment/nodefrontend nodefrontend=$imageName:$BUILD_NUMBER'
             }
         }     
         stage('Remove local docker image') {
