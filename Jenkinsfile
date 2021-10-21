@@ -43,22 +43,27 @@ pipeline {
                 }
             }
         }     
-        //  stage('deploy to k8s') {
-        //      agent {
-        //         docker { 
-        //             image 'google/cloud-sdk:latest'
-        //             args '-e HOME=/tmp'
-        //             reuseNode true
-        //                 }
-        //             }
-        //     steps {
-        //      }
-        // }     
-        // stage('Remove local docker image') {
-        //     steps{
-        //         sh "docker rmi $imageName:latest"
-        //         sh "docker rmi $imageName:$BUILD_NUMBER"
-        //     }
-        // }
+         stage('deploy to k8s') {
+             agent {
+                docker { 
+                    image 'google/cloud-sdk:latest'
+                    args '-e HOME=/tmp'
+                    reuseNode true
+                        }
+                    }
+            steps {
+                echo 'connecting to the GKE cluster'
+                sh 'gcloud container clusters get-credentials firstdown-munim-cluster --zone us-central1-a --project dtc-102021-u112'
+                
+                echo 'set image to update the container'
+                sh 'kubectl set image deployment/events-external events-external=$imageName:$BUILD_NUMBER'
+            }
+        }     
+        stage('Remove local docker image') {
+            steps{
+                sh "docker rmi $imageName:latest"
+                sh "docker rmi $imageName:$BUILD_NUMBER"
+            }
+        }
     }
 }
