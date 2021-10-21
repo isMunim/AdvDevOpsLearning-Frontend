@@ -63,6 +63,7 @@ pipeline {
         }     
         stage('Remove local docker image') {
             steps{
+                // removing the stale images
                 sh "docker rmi $imageName:latest"
                 sh "docker rmi $imageName:$BUILD_NUMBER"
             }
