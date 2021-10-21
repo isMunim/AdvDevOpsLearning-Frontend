@@ -2,7 +2,7 @@ pipeline {
     agent any 
     environment {
         registryCredential = 'docker'
-        imageName = 'ismunim/nodejs-frontend'
+        imageName = 'mannyaboah/nodefrontend'
         dockerImage = ''
         }
     stages {
@@ -16,7 +16,7 @@ pipeline {
             }
             steps {
                 echo 'Retrieve source from github. run npm install and npm test'
-                git branch: 'jenkins-testing',
+                git branch: 'manny-jenkins',
                     url: 'https://github.com/isMunim/AdvDevOpsLearning-Frontend.git'
                 echo 'checking if that worked'
                 sh 'ls -a'
